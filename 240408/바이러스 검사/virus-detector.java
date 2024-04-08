@@ -17,7 +17,8 @@ public class Main {
         int leader = Integer.parseInt(str[0]);
         int follower = Integer.parseInt(str[1]);
 
-        int answer = n;
+        long answer = n;
+        int remain = 0;
         for(int i = 0;i < n;i++) {
             client[i] -= leader;
             if(client[i] > 0) {
