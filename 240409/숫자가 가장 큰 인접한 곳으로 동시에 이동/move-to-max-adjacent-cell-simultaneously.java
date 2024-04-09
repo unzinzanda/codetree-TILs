@@ -69,7 +69,7 @@ public class Main {
             for(int s = 0;s < size;s++) {
                 Point temp = q.remove();
                 if(crash[temp.x][temp.y] == 1) q.add(temp);
-                else m--;
+                else m -= crash[temp.x][temp.y];
             }
         }
 
