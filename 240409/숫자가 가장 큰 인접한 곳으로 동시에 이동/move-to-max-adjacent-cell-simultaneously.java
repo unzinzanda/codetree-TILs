@@ -31,7 +31,7 @@ public class Main {
         int board[][] = new int[n][n];
         for(int i = 0;i < n;i++) {
             str = br.readLine().split(" ");
-            for(int j = 0;j > n;j++) board[i][j] = Integer.parseInt(str[j]);
+            for(int j = 0;j < n;j++) board[i][j] = Integer.parseInt(str[j]);
         }
 
         int dx[] = {-1, 1, 0, 0}, dy[] = {0, 0, -1, 1};
@@ -56,12 +56,11 @@ public class Main {
                     int ny = temp.y + dy[j];
 
                     if(nx < 0 || ny < 0 || nx >= n || ny >= n || board[move.x][move.y] >= board[nx][ny]) continue;
-
                     move = new Point(nx, ny);
                 }
 
-                if(move.x == temp.x && move.y == temp.y) continue;
                 crash[move.x][move.y]++;
+                if(move.x == temp.x && move.y == temp.y) continue;
                 q.add(move);
             }
 
@@ -69,7 +68,10 @@ public class Main {
             for(int s = 0;s < size;s++) {
                 Point temp = q.remove();
                 if(crash[temp.x][temp.y] == 1) q.add(temp);
-                else m -= crash[temp.x][temp.y];
+                else {
+                    m -= crash[temp.x][temp.y];
+                    crash[temp.x][temp.y] = 0;
+                }
             }
         }
 
