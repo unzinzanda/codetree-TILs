@@ -41,13 +41,15 @@ public class Main {
                 for(int j = 0;j < n;j++) {
                     if(count[i][j] == 1) {
                         int moveX = i, moveY = j;
+                        int maxNumber = -1;
 
                         for(int k = 0;k < 4;k++) {
                             int nx = i + dx[k];
                             int ny = j + dy[k];
 
-                            if(nx < 0 || ny < 0 || nx >= n || ny >= n || board[moveX][moveY] >= board[nx][ny]) continue;
-
+                            if(nx < 0 || ny < 0 || nx >= n || ny >= n || board[nx][ny] <= maxNumber) continue;
+                            
+                            maxNumber = board[nx][ny];
                             moveX = nx;
                             moveY = ny;
                         }
