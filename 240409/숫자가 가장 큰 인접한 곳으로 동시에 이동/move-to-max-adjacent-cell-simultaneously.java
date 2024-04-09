@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.*;
 /*
     현재 칸보다 큰 숫자로 이동(t회)
     이동할 수 있는 칸이 많으면 우선순위 높은 곳으로 이동(우선순위 상 > 하 > 좌 > 우)
@@ -12,15 +11,6 @@ import java.util.*;
 */
 
 public class Main {
-    static class Point {
-        int x;
-        int y;
-
-        public Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String str[] = br.readLine().split(" ");
@@ -35,42 +25,46 @@ public class Main {
         }
 
         int dx[] = {-1, 1, 0, 0}, dy[] = {0, 0, -1, 1};
-        Queue<Point> q = new LinkedList<>();
+        int count[][] = new int[n][n];
 
         for(int i = 0;i < m;i++) {
             str = br.readLine().split(" ");
-            q.add(new Point(Integer.parseInt(str[0]) - 1, Integer.parseInt(str[1]) - 1));
+            count[Integer.parseInt(str[0]) - 1][Integer.parseInt(str[1]) - 1] = 1;
         }
 
+
         for(int t = 0; t < T;t++) {
-            int crash[][] = new int[n][n];
-            
-            int size = q.size();
+            int nextCount[][] = new int[n][n];
 
-            for(int i = 0;i < size;i++) {
-                Point temp = q.remove();
-                Point move = new Point(temp.x, temp.y);
+            // 구슬 옮기기
+            for(int i = 0;i < n;i++) {
+                for(int j = 0;j < n;j++) {
+                    if(count[i][j] == 1) {
+                        int moveX = i, moveY = j;
 
-                for(int j = 0;j < 4;j++) {
-                    int nx = temp.x + dx[j];
-                    int ny = temp.y + dy[j];
+                        for(int k = 0;k < 4;k++) {
+                            int nx = i + dx[k];
+                            int ny = j + dy[k];
 
-                    if(nx < 0 || ny < 0 || nx >= n || ny >= n || board[move.x][move.y] >= board[nx][ny]) continue;
-                    move = new Point(nx, ny);
+                            if(nx < 0 || ny < 0 || nx >= n || ny >= n || board[moveX][moveY] >= board[nx][ny]) continue;
+
+                            moveX = nx;
+                            moveY = ny;
+                        }
+
+                        nextCount[moveX][moveY] += 1;
+                    }
                 }
-
-                crash[move.x][move.y]++;
-                if(move.x == temp.x && move.y == temp.y) continue;
-                q.add(move);
             }
 
-            size = q.size();
-            for(int s = 0;s < size;s++) {
-                Point temp = q.remove();
-                if(crash[temp.x][temp.y] == 1) q.add(temp);
-                else {
-                    m -= crash[temp.x][temp.y];
-                    crash[temp.x][temp.y] = 0;
+            // 충돌한 구슬 지우고 count로 복사
+            for(int i = 0;i < n;i++) {
+                for(int j = 0;j < n;j++) {
+                    if(nextCount[i][j] > 1) {
+                        m -= nextCount[i][j];
+                        nextCount[i][j] = 0;
+                    }
+                    count[i][j] = nextCount[i][j];
                 }
             }
         }
