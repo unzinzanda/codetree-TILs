@@ -250,11 +250,16 @@ public class Main {
 				santas[temp].crash = true;
 			}
 
+			boolean flag = true;
 			// 살아 있는 산타에게 점수 주기
 			for (int i = 1; i <= P; i++) {
-				if (!santas[i].dead)
+				if (!santas[i].dead) {
 					score[i] += 1;
+					flag = false;
+				}
 			}
+			
+			if(flag) break;
 			
 //			for(int i = 1;i <= N;i++) {
 //				for(int j = 1;j <= N;j++) System.out.print(map[i][j] + "\t");
