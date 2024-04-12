@@ -141,11 +141,11 @@ public class Main {
 		for(int k = 0;k < K;k++) {
 			movePlayer();
 			findPlayer(false);
+			if(players.isEmpty()) break;
 			findSquare();
 			rotate();
 			players = new ArrayList<>();
 			findPlayer(true);
-			if(players.isEmpty()) break;
 		}
 		
 		System.out.println(result);
