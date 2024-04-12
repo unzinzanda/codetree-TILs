@@ -139,8 +139,8 @@ public class Main {
 	static void SantaToRudolf(int idx, int dir) {
 		score[idx] += D;
 
-		int nx = santas[idx].x + dx[(dir + 2) % 4];
-		int ny = santas[idx].y + dy[(dir + 2) % 4];
+		int nx = santas[idx].x + (dx[(dir + 2) % 4] * D) - 1;
+		int ny = santas[idx].y + (dy[(dir + 2) % 4] * D) - 1;
 
 		// 장외 홈런 -> 죽음
 		if (nx <= 0 || ny <= 0 || nx > N || ny > N) {
