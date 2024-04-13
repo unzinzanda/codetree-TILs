@@ -59,18 +59,24 @@ public class Main {
 				cnt++;
 				q.add(new Point(nx, ny));
 			}
+			
+			if(cnt == 0) continue;
 
 			// 번지는 칸에 나무를 심고 처음 나무가 심길 때 trees 배열에 추가
-			while (!q.isEmpty()) {
-				Point cur = q.remove();
-				if (temp[cur.x][cur.y] == 0)
-					trees.add(cur);
-				temp[cur.x][cur.y] += (temp[tree.x][tree.y] / cnt);
+			int plant = temp[tree.x][tree.y] / cnt; 
+			if(plant != 0) {
+				while (!q.isEmpty()) {
+					Point cur = q.remove();
+					if (temp[cur.x][cur.y] == 0)
+						trees.add(cur);
+					temp[cur.x][cur.y] += plant;
+				}
 			}
 		}
 
 		for (int i = 0; i < n; i++)
 			map[i] = temp[i].clone();
+
 	}
 
 	static Point findTree() {
@@ -169,15 +175,18 @@ public class Main {
 					trees.remove(i);
 			}
 
+			System.out.println("새로운 시작!");
 			// 나무 성장!
 			for (Point tree : trees) {
 				if (notGrow[tree.x][tree.y] == 0) {
 					grow(tree);
 				}
 			}
+			
 
 			// 나무 번식
 			spread();
+
 			// 제초제 뿌릴 나무 고르기
 			spray();
 
