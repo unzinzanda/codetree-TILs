@@ -175,7 +175,6 @@ public class Main {
 					trees.remove(i);
 			}
 
-			System.out.println("새로운 시작!");
 			// 나무 성장!
 			for (Point tree : trees) {
 				if (notGrow[tree.x][tree.y] == 0) {
