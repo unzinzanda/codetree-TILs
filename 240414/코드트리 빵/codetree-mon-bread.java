@@ -32,11 +32,12 @@ public class Main {
 	static Point store[]; // 사람들이 도착해야 할 편의점 좌표 배열
 	static boolean notPass[][];
 	static Queue<Point> going = new LinkedList<>();
+	static Queue<Point> complete = new LinkedList<>();
 	static int dx[] = {-1, 0, 0, 1}, dy[] = {0, -1, 1, 0};
 	
 	// 상 좌 우 하 순서로 이동하므로 먼저 찾은 최단 거리가 우선
 	static Point findBase(int idx) {
-		Point s = store[idx]; // 목적지 편의점
+		Point s = store[idx]; // 목적지 편의점 
 		boolean visited[][] = new boolean[N][N];
 		Queue<Point> q = new LinkedList<>();
 		visited[s.x][s.y] = true;
@@ -88,7 +89,10 @@ public class Main {
 				// 편의점 도착 여부 확인
 				if(nx == store[player.idx].x && ny == store[player.idx].y) {
 					if(temp.depth + 1 > minDist) continue;
-					
+					if(temp.depth + 1 == minDist) {
+						if(moveDir > temp.dir) moveDir = temp.dir;
+						continue;
+					}
 					minDist = temp.depth + 1;
 					if(temp.dir == -1) {
 						moveDir = i;
@@ -107,7 +111,7 @@ public class Main {
 		int ny = player.y + dy[moveDir];
 		// 도착하면 칸 못 지나가게 처리하고 going 큐에 추가하지 않음
 		if(nx == store[player.idx].x && ny == store[player.idx].y) {
-			notPass[nx][ny] = true;
+			complete.add(new Point(nx, ny, player.idx));
 		}
 		
 		// 도착하지 못하면 아직 이동 중이므로 going 큐에 추가
@@ -151,6 +155,11 @@ public class Main {
 			for(int i = 0; i < size;i++) {
 				Point s = going.remove();
 				goToStore(s);
+			}
+			
+			while(!complete.isEmpty()) {
+				Point c = complete.remove();
+				notPass[c.x][c.y] = true;
 			}
 			
 			if(time <= M) {
