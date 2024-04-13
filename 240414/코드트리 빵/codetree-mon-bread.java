@@ -125,7 +125,7 @@ public class Main {
 		
 		map = new int[N][N];
 		notPass = new boolean[N][N];
-		store = new Point[N];
+		store = new Point[M];
 		
 		for(int i = 0;i < N;i++) {
 			str = br.readLine().split(" ");
