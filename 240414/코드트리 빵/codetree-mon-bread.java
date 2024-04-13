@@ -35,34 +35,49 @@ public class Main {
 	static Queue<Point> complete = new LinkedList<>();
 	static int dx[] = {-1, 0, 0, 1}, dy[] = {0, -1, 1, 0};
 	
-	// 상 좌 우 하 순서로 이동하므로 먼저 찾은 최단 거리가 우선
+	// x 작고 y 작은 베이스캠프 찾기
 	static Point findBase(int idx) {
 		Point s = store[idx]; // 목적지 편의점 
 		boolean visited[][] = new boolean[N][N];
-		Queue<Point> q = new LinkedList<>();
+		Queue<BfsPoint> q = new LinkedList<>();
 		visited[s.x][s.y] = true;
-		q.add(new Point(s.x, s.y, idx));
+		q.add(new BfsPoint(s.x, s.y, -1, 0));
+		Point base = null;
 		
+		int minDist = Integer.MAX_VALUE;
 		while(!q.isEmpty()) {
-			Point temp = q.remove();
+			BfsPoint temp = q.remove();
 			
 			for(int i = 0;i < 4;i++) {
 				int nx = temp.x + dx[i];
 				int ny = temp.y + dy[i];
 				
 				if(nx < 0 || ny < 0 || nx >= N || ny >= N || visited[nx][ny] || notPass[nx][ny]) continue;
-				if(map[nx][ny] == 1) return new Point(nx, ny, idx);
+				if(map[nx][ny] == 1) {
+					if(temp.depth + 1 > minDist) continue;
+					if(temp.depth + 1 == minDist) {
+						if(base.x == nx) {
+							if(base.y > ny) base = new Point(nx, ny, idx);
+						} else if(base.x > nx) base = new Point(nx, ny, idx);
+						
+						continue;
+					}
+					minDist = temp.depth + 1;
+					base = new Point(nx, ny, idx);
+					continue;
+				}
 				visited[nx][ny] = true;
-				q.add(new Point(nx, ny, idx));
+				q.add(new BfsPoint(nx, ny, -1, temp.depth + 1));
 			}
 		}
 		
-		return null;
+		return base;
 	}
 	
 	static void entrance(Point start) {
 		// 지나갈 수 없닷!!
-		notPass[start.x][start.y] = true;
+//		notPass[start.x][start.y] = true;
+		complete.add(new Point(start.x, start.y, start.idx));
 		// 출발한 사람을 큐에 추가.
 		going.add(start);
 	}
