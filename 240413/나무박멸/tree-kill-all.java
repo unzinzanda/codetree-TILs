@@ -15,6 +15,7 @@ public class Main {
 
 	static int n, m, k, c, map[][], result;
 	static ArrayList<Point> trees = new ArrayList<>();
+	static Queue<Point> spraiedTrees = new LinkedList<>();
 	static int dx[] = { 0, 0, 1, -1 }, dy[] = { 1, -1, 0, 0 };
 	static int diaX[] = { 1, 1, -1, -1 }, diaY[] = { 1, -1, 1, -1 };
 	static int notGrow[][];
@@ -70,6 +71,12 @@ public class Main {
 
 		for (int i = 0; i < n; i++)
 			map[i] = temp[i].clone();
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++)
+				System.out.print(map[i][j] + "\t");
+			System.out.println();
+		}
 	}
 
 	static Point findTree() {
@@ -113,9 +120,8 @@ public class Main {
 		// 스프레이 뿌릴 칸 고르기
 		Point startPoint = findTree();
 
-		map[startPoint.x][startPoint.y] = 0;
-		notGrow[startPoint.x][startPoint.y] = c;
-		// 제초제 뿌려잇!
+		spraiedTrees.add(startPoint);
+		// 제초제 뿌릴 칸 저장!
 		for (int i = 0; i < 4; i++) {
 			for (int j = 1; j <= k; j++) {
 				int nx = startPoint.x + (diaX[i] * j);
@@ -126,10 +132,9 @@ public class Main {
 					break;
 
 				// 제초제 뿌리기
-				notGrow[nx][ny] = c;
+				spraiedTrees.add(new Point(nx, ny));
 				if (map[nx][ny] == 0)
 					break;
-				map[nx][ny] = 0;
 			}
 		}
 	}
@@ -156,7 +161,20 @@ public class Main {
 			}
 		}
 
-		for(int t = 0;t < m;t++) {
+		while (m-- > 0) {
+			while (!spraiedTrees.isEmpty()) {
+				Point temp = spraiedTrees.remove();
+				notGrow[temp.x][temp.y] = c;
+				map[temp.x][temp.y] = 0;
+			}
+
+			// 제초제가 뿌려져 사라진 나무를 trees 배열에서 제거
+			for (int i = trees.size() - 1; i >= 0; i--) {
+				Point tree = trees.get(i);
+				if (notGrow[tree.x][tree.y] > 0)
+					trees.remove(i);
+			}
+
 			// 나무 성장!
 			for (Point tree : trees) {
 				if (notGrow[tree.x][tree.y] == 0) {
@@ -166,24 +184,14 @@ public class Main {
 
 			// 나무 번식
 			spread();
-
-			// 제초제 뿌리기
+			// 제초제 뿌릴 나무 고르기
 			spray();
 
-			// 제초제가 뿌려져 사라진 나무를 trees 배열에서 제거
-			for (int i = trees.size() - 1; i >= 0; i--) {
-				Point tree = trees.get(i);
-				if (notGrow[tree.x][tree.y] > 0)
-					trees.remove(i);
-			}
-			
-			if(t != 0) {
-				// 제초제 시간 줄이기
-				for (int i = 0; i < n; i++) {
-					for (int j = 0; j < n; j++) {
-						if (notGrow[i][j] > 0)
-							notGrow[i][j] -= 1;
-					}
+			// 제초제 시간 줄이기
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
+					if (notGrow[i][j] > 0)
+						notGrow[i][j] -= 1;
 				}
 			}
 		}
