@@ -84,7 +84,7 @@ public class Main {
 	}
 	
 	static boolean checkOut() {
-		int x = curSpace.x + 1;
+		int x = curSpace.x;
 		int y = curSpace.y;
 		
 		if(map[x][y] != 0) return true;
