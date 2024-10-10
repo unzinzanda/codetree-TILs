@@ -17,8 +17,8 @@ public class Main {
     static void moveNut(int d, int p) {
         int size = nutrition.size();
 
-        for(int i = 0;i < size;i++) {
-            Point temp = nutrition.removeFirst();
+        for(int i = size - 1;i >= 0;i--) {
+            Point temp = nutrition.remove(i);
             temp.x = (temp.x + dx[d] * p) % N;
             temp.y = (temp.y + dy[d] * p) % N;
             if(temp.x < 0) temp.x += N;
